@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -28,8 +27,7 @@ public class StepicCourseTests extends TestBase {
             "Java. Collections Framework.",
             "Тестирование ПО с нуля. Теория + Практика"
     })
-    @ParameterizedTest
-    @DisplayName("Проверка добавления курса в список желаний.")
+    @ParameterizedTest(name = "Проверка добавления курса в список желаний.")
     void addedCourseInWishList(String searchCourse) {
         //добавление
         $(".search-form__input").setValue(searchCourse).pressEnter();
@@ -44,9 +42,9 @@ public class StepicCourseTests extends TestBase {
         closeWindow();
     }
 
-    @ParameterizedTest
+
     @MethodSource
-    @DisplayName("Проверка смены названия кнопки при изменении языковых настроек.")
+    @ParameterizedTest(name = "Проверка смены названия кнопки при изменении языковых настроек.")
     void checkSearchButtonLanguage(String language, String buttonText) {
         //добавление
         $(".navbar__submenu-toggler").click();
@@ -61,8 +59,7 @@ public class StepicCourseTests extends TestBase {
             "courses-wishlist, Хочу пройти",
             "courses-archive, Архив"
     })
-    @ParameterizedTest
-    @DisplayName("Проверка отображения заголовков в пунктах меню Моё обучение.")
+    @ParameterizedTest(name = "Проверка отображения заголовков в пунктах меню Моё обучение.")
     void checkAccountMenu(String hrefMenu, String headerMenu) {
         open("/learn/courses");
         $(".nav-menu__menu").$("[data-item=" + hrefMenu + "]").click();
