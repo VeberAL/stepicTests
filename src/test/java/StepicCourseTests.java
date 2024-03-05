@@ -1,29 +1,29 @@
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.stream.Stream;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
-public class StepicCourseTests {
-    @BeforeAll
-    static void resolutionAndUrl() {
-        Configuration.browserSize = "1920x1080";
-        Configuration.baseUrl = "https://stepik.org";
-        Configuration.pageLoadStrategy = "eager";
-        Configuration.holdBrowserOpen = true;
-        Configuration.timeout = 20000;
+public class StepicCourseTests extends TestBase {
+    static Stream<Arguments> checkSearchButtonLanguage() {
+        return Stream.of(
+                Arguments.of("en", "Search"),
+                Arguments.of("ru", "Искать"),
+                Arguments.of("be", "Шукаць"),
+                Arguments.of("de", "Suche"),
+                Arguments.of("es", "Buscar"),
+                Arguments.of("pt", "Procurar"),
+                Arguments.of("uk", "Шукати"),
+                Arguments.of("zh-hans", "搜索")
+        );
     }
-    @BeforeEach
-    void signUpStepic() {
-        open("/catalog?auth=login");
-        $("[name=login]").setValue("qa.guru.test@list.ru");
-        $("[name=password]").setValue("12832156ф");
-        $(".sign-form__btn").click();
-        sleep(1000);
-    }
+
     @ValueSource(strings = {
             "Java. Collections Framework.",
             "Тестирование ПО с нуля. Теория + Практика"
@@ -44,4 +44,29 @@ public class StepicCourseTests {
         closeWindow();
     }
 
+    @ParameterizedTest
+    @MethodSource
+    @DisplayName("Проверка смены названия кнопки при изменении языковых настроек.")
+    void checkSearchButtonLanguage(String language, String buttonText) {
+        //добавление
+        $(".navbar__submenu-toggler").click();
+        $(".menu_theme_popup-dark").$("[data-lang = " + language + "]").click();
+        $(".search-form__submit").shouldHave(text(buttonText));
+        closeWindow();
+    }
+
+    @CsvSource(value = {
+            "courses-active, Курсы",
+            "courses-favorites, Избранные курсы",
+            "courses-wishlist, Хочу пройти",
+            "courses-archive, Архив"
+    })
+    @ParameterizedTest
+    @DisplayName("Проверка отображения заголовков в пунктах меню Моё обучение.")
+    void checkAccountMenu(String hrefMenu, String headerMenu) {
+        open("/learn/courses");
+        $(".nav-menu__menu").$("[data-item=" + hrefMenu + "]").click();
+        $(".marco-layout__header h1").shouldHave(text(headerMenu));
+        closeWindow();
+    }
 }
