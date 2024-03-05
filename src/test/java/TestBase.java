@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -10,7 +11,7 @@ public class TestBase {
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = "https://stepik.org";
         Configuration.pageLoadStrategy = "eager";
-        Configuration.holdBrowserOpen = true;
+//      Configuration.holdBrowserOpen = true;
         Configuration.timeout = 20000;
     }
 
@@ -21,5 +22,10 @@ public class TestBase {
         $("[name=password]").setValue("12832156ф");
         $(".sign-form__btn").click();
         sleep(1000);
+    }
+
+    @AfterEach
+    void closeBrowser() {
+        closeWindow();
     }
 }

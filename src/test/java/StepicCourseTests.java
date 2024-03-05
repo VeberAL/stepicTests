@@ -39,18 +39,16 @@ public class StepicCourseTests extends TestBase {
         $(".marco-layout__content").shouldHave(text(searchCourse));
         $$(".learn-course-tile").findBy(text(searchCourse)).click();
         $("button.course-promo-enrollment__wishlist-btn").click();
-        closeWindow();
     }
 
 
-    @MethodSource
+    @MethodSource("checkSearchButtonLanguage")
     @ParameterizedTest(name = "Проверка смены названия кнопки при изменении языковых настроек.")
     void checkSearchButtonLanguage(String language, String buttonText) {
         //добавление
         $(".navbar__submenu-toggler").click();
         $(".menu_theme_popup-dark").$("[data-lang = " + language + "]").click();
         $(".search-form__submit").shouldHave(text(buttonText));
-        closeWindow();
     }
 
     @CsvSource(value = {
@@ -64,6 +62,5 @@ public class StepicCourseTests extends TestBase {
         open("/learn/courses");
         $(".nav-menu__menu").$("[data-item=" + hrefMenu + "]").click();
         $(".marco-layout__header h1").shouldHave(text(headerMenu));
-        closeWindow();
     }
 }
